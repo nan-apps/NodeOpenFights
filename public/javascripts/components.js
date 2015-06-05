@@ -52,6 +52,7 @@ Crafty.c('Player', {
     startTimerFire: null,  
     pColor: null,
     powerBar: null,
+    theOther: null,
     init: function() {
         e = this;
         this.requires('Global, Collision, Keyboard, Text');
@@ -75,7 +76,7 @@ Crafty.c('Player', {
         this.pColor = color;
         this.color( this.pColor );
         
-        this.scoreText = Crafty.e("2D, DOM, Text").attr({ x: this.x+9, y: this.y+5, z:5 }).text( this.life )
+        this.scoreText = Crafty.e("2D, DOM, Text").attr({ x: this.x+8, y: this.y+5, z:5 }).text( this.life )
                                                                          .textColor( '#FFFFFF', 1 )
                                                                          .textFont({ size: '15px', weight: 'bold' });
         
@@ -103,13 +104,16 @@ Crafty.c('Player', {
         this.scoreText.text( this.life );
         if (this.life < 0){
             this.death();
+            this.theOther.win();
+            Game.finish();
         }
     },
     death: function(){
-        this.scoreText.text( 'RIP' );        
-        Game.player1.unbind('KeyDown').unbind('KeyUp');
-        Game.player2.unbind('KeyDown').unbind('KeyUp');
-    }
+        this.scoreText.text( 'RIP' );                
+    },
+    win: function(){
+        this.scoreText.text( 'WIN' );                
+    },
 });
 
 
@@ -124,8 +128,7 @@ Crafty.c('PowerBar', {
             w : this.width,
             h : this.height,
             z : 3
-        });     
-        fb(this);
+        });             
     },
     at: function( player ){
         this.xPos = player.xPos

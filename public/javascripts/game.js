@@ -42,6 +42,10 @@ Game = {
     height: 300,    
     player1: null,
     player2: null,
+    finish: function(){
+        this.player1.unbind('KeyDown').unbind('KeyUp');
+        this.player2.unbind('KeyDown').unbind('KeyUp');
+    },
     init : function(){
         
         Crafty.init( this.width, this.height );    
@@ -98,6 +102,10 @@ Game = {
                 }
                 
             }); 
+        
+        this.player1.theOther = this.player2;
+        this.player2.theOther = this.player1;
+        
     }    
     
 };
