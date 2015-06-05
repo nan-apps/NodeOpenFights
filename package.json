@@ -1,0 +1,27 @@
+{
+  "name": "NodeOpenFights",
+  "version": "0.0.0",
+  "description": "Simple opensource remote fighting game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nan-apps/NodeOpenFights"
+  },
+  "keywords": [
+    "fights",
+    "strategy",
+    "express",
+    "socket.io"
+  ],
+  "author": "nan-apps",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/nan-apps/NodeOpenFights/issues"
+  },
+  "dependencies": {
+    "express": "~4.12.4"
+  }
+}
