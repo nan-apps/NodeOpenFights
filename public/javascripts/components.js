@@ -87,21 +87,28 @@ Crafty.c('Player', {
     chargeFire: function(){
         this.startTimerFire = new Date().getTime();  
         this.powerBar.increase();
+        Game.socket.emit( 'actionData', { 'playerId': this.id , 'action': 'chargeFire' } );
     },        
     fire: function() {
         Crafty.e('Fire').ammo( this );
     },
-    shield: function(){
-        this.eShield = Crafty.e('Shield').shield( this );        
+    shield: function(){        
+        this.eShield = Crafty.e('Shield').shield( this );                
     },
     unshield: function(){
+        Game.socket.emit( 'actionData', { 'playerId': this.id , 'action': 'unshield' } );  
         if( this.eShield != null )
-            this.eShield.destroy();
+            this.eShield.destroy();        
     },
     harm: function( damage ){
-
+        
         this.life = this.life - damage;
         this.scoreText.text( this.life );
+        
+        Game.socket.emit( 'actionData', { 'playerId': this.id , 
+                                          'action': 'lifeUpdate', 
+                                          'life' : this.life } );
+      
         if (this.life < 0){
             this.death();
             this.theOther.win();
@@ -109,9 +116,11 @@ Crafty.c('Player', {
         }
     },
     death: function(){
+        Game.socket.emit( 'actionData', { 'playerId': this.id , 'action': 'rip' } );
         this.scoreText.text( 'RIP' );                
     },
     win: function(){
+        Game.socket.emit( 'actionData', { 'playerId': this.id , 'action': 'win' } );  
         this.scoreText.text( 'WIN' );                
     },
 });
@@ -208,8 +217,10 @@ Crafty.c('Fire', {
             h: ammoSize
         });
         
-        this.tween( {x: direction}, this.speed );
-        
+        this.emitData();
+      
+        this.tween( {x: direction}, this.speed );        
+      
         player.powerBar.reset();
         
         this.color( player.pColor );
@@ -231,6 +242,9 @@ Crafty.c('Fire', {
             size = this.power*3;
         
         return size;
+    },
+    emitData: function(){
+        Game.socket.emit( 'actionData', { 'playerId': this.id , 'action': 'fire', 'damage':this.damage } );  
     }
 });
 
@@ -261,10 +275,13 @@ Crafty.c( 'Shield', {
             x: this.player.xPos - ( (this.width - this.player.w)/2 ),
             y: this.player.yPos - ( (this.height - this.player.h)/2 )
         });
+        
         return this;
     },        
     shield: function( player ){ 
         
+        var self = this;
+      
         this.player = player;
         this.width = player.w + 20;
         this.height = player.h + 20,
@@ -277,16 +294,25 @@ Crafty.c( 'Shield', {
             z:1
         });
         var cont = 0;
-        this.delay( function(){
-           cont++;            
+        
+        this.emitData();
+      
+        this.delay( function(){          
+           cont++;                       
            if(cont === 3){
-               this.destroy();
+               self.player.unshield();
                return;
            }
            this.increaseShield();
+           this.emitData();
         }, 1000, 1000);        
         
         return this;
+    },
+    emitData: function(){
+      Game.socket.emit( 'actionData', { 'playerId': this.id , 
+                                          'action': 'shield', 
+                                          'power':this.shieldPower  });
     }
 });
 

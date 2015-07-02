@@ -46,11 +46,21 @@ Game = {
         this.player1.unbind('KeyDown').unbind('KeyUp');
         this.player2.unbind('KeyDown').unbind('KeyUp');
     },
+    socket: null,
     init : function(){
         
         Crafty.init( this.width, this.height );    
-      //  Crafty.canvas.init();
+        //  Crafty.canvas.init();
         
+        //init socket io client
+        this.socket = io();
+        
+        //recibo acciones del servidor para ejecutar
+        this.socket.on('actionData', function( actionData ){
+          console.log( actionData );
+          //var player =  actionData.playerId == 'player1' ? Game.player1 : Game.player2;
+          //player.actionManager( actionData.action );
+        });
         
         var y = ( this.height - Player.h ) / 2;
         
@@ -61,18 +71,26 @@ Game = {
                          
         this.player1 = Crafty.e('Player').at( 'player1', Player.x, y, '#000' )
             .bind( 'KeyDown', function( e ){
-        
+                
                 switch ( e.key ){
-                    case Controls.Player1.fire: this.chargeFire(); break;
-                    case Controls.Player1.shield: this.shield();                    
+                    case Controls.Player1.fire:                      
+                      this.chargeFire(); 
+                      break;
+                    case Controls.Player1.shield:                      
+                      this.shield();              
+                      break;
                 }
                 
             })
             .bind( 'KeyUp', function( e ){
-            
+                                
                 switch( e.key ){
-                    case Controls.Player1.fire: this.fire();  break;
-                    case Controls.Player1.shield: this.unshield();  break;                 
+                    case Controls.Player1.fire:    
+                      this.fire();      
+                      break;
+                    case Controls.Player1.shield:  
+                      this.unshield();  
+                      break;                 
                 }
                 
             });   
@@ -109,3 +127,6 @@ Game = {
     }    
     
 };
+
+
+
