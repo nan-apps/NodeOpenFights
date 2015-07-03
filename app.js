@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var swig = require('swig');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -10,9 +11,16 @@ var userRoute = require('./routes/users');
 
 var app = express();
 
+//swig conf
+swig.setDefaults({ varControls: ['<%', '%>'] })
+swig.setDefaults({ cache: false });
+
 // view engine setup
+// Set swig as the template engine
+
+app.engine('swig', swig.renderFile);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'swig');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
