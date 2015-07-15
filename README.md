@@ -4,5 +4,4 @@ This new version is developed with node expressjs and the idea is adding remote 
 
 Run 
 npm install
-bower install
 
