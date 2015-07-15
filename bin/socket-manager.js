@@ -1,0 +1,70 @@
+
+var init = function( io ){
+
+  io.on('connection', function( socket ){
+  
+    console.log('a user connected');
+    
+    socket.on( 'init', function( data ){             
+      socket.data = data;
+      socket.data.id = socket.id;   
+      console.log('init data');
+      console.log( data );
+      updateClients( socket, io );
+    });
+    
+    socket.on( 'actionData', function( data ){       
+      actions( socket, io, data );
+      updateClients( socket, io );
+    });
+   
+    socket.on('disconnect', function(){      
+      console.log('user disconnected');
+      updateClients( socket, io );      
+    });
+
+  });
+
+  
+}
+
+
+var actions = function( socket, io, data ){
+  //io.emit('actionData',  data );
+  
+  switch( data.action ){  
+    case 'dataUpdate':            
+      socket.data[ data.name ] = data.value;      
+      break;  
+  }
+  
+}
+
+//broadcast updated clients list
+var updateClients = function( socket, io ){  
+      
+  var clients = io.sockets.adapter.rooms
+  
+  //iterate sockets
+  for (var socketId in clients ) {   
+      var player = io.sockets.connected[ socketId ];
+      var clientsData = [];
+      
+      //to each socket i send socket data, excepts itself
+      for (var id in clients ) {           
+        if( socketId != id ){
+          var oponent = io.sockets.connected[ id ];          
+          clientsData.push( oponent.data );    
+        }
+        
+      }
+      console.log( clientsData );
+      socket.broadcast.to( player.id ).emit( 'players', clientsData );    
+  }
+  
+  
+  
+  
+}
+
+exports.init = init;

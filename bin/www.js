@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('NodeOpenFights:server');
 var http = require('http');
+var socketManager = require('./socket-manager');
 
 /**
  * Get port from environment and store in Express.
@@ -27,16 +28,8 @@ var server = http.createServer(app);
 */
 
 var io = require('socket.io')( server );
+socketManager.init( io );
 
-io.on('connection', function(socket){
-  console.log('a user connected');
-  socket.on( 'actionData', function( data ){    
-    io.emit('actionData',  data );
-  });
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
-});
 
 /**
  * Listen on provided port, on all network interfaces.

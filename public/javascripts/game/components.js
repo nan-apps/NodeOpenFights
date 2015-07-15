@@ -43,7 +43,9 @@ Crafty.c('Global', {
 Crafty.c('Player', {
     id:null,
     life: 100,
+    nick: '',
     scoreText: null,
+    nickText: null,
     width: Player.w,
     height: Player.h,
     xPos: 0,
@@ -74,9 +76,14 @@ Crafty.c('Player', {
             h: this.height
         });
         this.pColor = color;
-        this.color( this.pColor );
+        this.changeColor( this.pColor, false );      
         
-        this.scoreText = Crafty.e("2D, DOM, Text").attr({ x: this.x+8, y: this.y+5, z:5 }).text( this.life )
+        this.nickText = Crafty.e("2D, DOM, Text").attr({ x: this.x+8, y: this.y+5, z:5 }).text( this.nick )
+                                                                       .textColor( '#FFFFFF', 1 )
+                                                                       .textFont({ size: '15px', weight: 'bold'});
+                                                                                    
+                                                                                    
+        this.scoreText = Crafty.e("2D, DOM, Text").attr({ x: this.x+8, y: this.y+25, z:5 }).text( this.life )
                                                                          .textColor( '#FFFFFF', 1 )
                                                                          .textFont({ size: '15px', weight: 'bold' });
         
@@ -87,7 +94,7 @@ Crafty.c('Player', {
     chargeFire: function(){
         this.startTimerFire = new Date().getTime();  
         this.powerBar.increase();
-        Game.socket.emit( 'actionData', { 'playerId': this.id , 'action': 'chargeFire' } );
+        Game.socket.emit( 'actionData', { 'action': 'chargeFire' } );
     },        
     fire: function() {
         Crafty.e('Fire').ammo( this );
@@ -96,18 +103,34 @@ Crafty.c('Player', {
         this.eShield = Crafty.e('Shield').shield( this );                
     },
     unshield: function(){
-        Game.socket.emit( 'actionData', { 'playerId': this.id , 'action': 'unshield' } );  
+        Game.socket.emit( 'actionData', { 'action': 'unshield' } );  
         if( this.eShield != null )
             this.eShield.destroy();        
+    },    
+    changeNick: function( nick ){
+      nick = nick.toUpperCase();
+      this.nick = nick;
+      this.nickText.text( nick );
+      Game.socket.emit( 'actionData', {   'action': 'dataUpdate', 
+                                          'name' : 'nick',
+                                          'value' : nick });
+    },
+    changeColor: function( color, emit ){
+      this.color( color );
+      if( emit ){
+        Game.socket.emit( 'actionData', {   'action': 'dataUpdate', 
+                                            'name' : 'color',
+                                            'value' : color });
+      }
     },
     harm: function( damage ){
         
         this.life = this.life - damage;
         this.scoreText.text( this.life );
         
-        Game.socket.emit( 'actionData', { 'playerId': this.id , 
-                                          'action': 'lifeUpdate', 
-                                          'life' : this.life } );
+        Game.socket.emit( 'actionData', { 'action': 'dataUpdate', 
+                                          'name' : 'life',
+                                          'value' : this.life });
       
         if (this.life < 0){
             this.death();

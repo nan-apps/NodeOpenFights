@@ -1,5 +1,5 @@
 body{
-    font-family: Roboto;
+    font-family: 'Inconsolata', sans-serif;
     padding-top: 50px;
     background-color: antiquewhite;
 }
@@ -22,35 +22,37 @@ h1{
     background-color: aquamarine;               
     min-height: 300px;
 }
-#player-picker .mypanel{
+#oponent-picker .mypanel{
     background-color: aquamarine;               
     min-height: 300px;
+  padding-left: 7px;
 }
 .starter-template {
   padding: 40px 15px;
   text-align: center;
 }
 
-
-/* Color Selector */
-
-#color-picker .mypanel{
-   padding-bottom: 6px;
-   padding-top: 10px;
-}
-
-.colorSelector{
+.color-selector{
   width:50px;
   height: 50px;
-  border-radius: 10px;
-  margin: auto auto 7px;
+  border-radius: 10px;  
   cursor: pointer;
   transitio:box-shadow 1s ease 1s, border 1s ease 1s;
+  font-size: 15px;
 }
 
-.colorSelector:hover{
+.color-selector:hover, .color-selector.active{
   border: 1px solid #707070;
   box-shadow: 0 0 5px 1px #969696;
+}
+
+.color-selector i{
+  opacity: 0;
+  transition: opacity .5s ease;  
+}
+
+.color-selector.active i{   
+  opacity: 1;
 }
 
 .color1{
@@ -68,3 +70,48 @@ h1{
 .color5{
   background-color: coral;
 }
+
+/* Nick */
+input[name="nick"]{
+  width: 75px;
+  text-transform: uppercase;
+}
+span.nick{
+  display: inline-block;
+  width: 100%;
+}
+
+/* Oponent Selector */
+#oponent-picker .color-selector{
+  float: left;
+  margin-left: 10px; 
+  margin-bottom: 5px;
+  font-weight: bold;
+  color:#fff;
+  padding-top:5px; 
+  border: #fff solid 1px; 
+}
+
+
+/* Color Selector */
+
+#color-picker .mypanel, #oponent-picker .mypanel{
+   padding-bottom: 6px;
+   padding-top: 10px;
+}
+
+
+#color-picker .color-selector{
+  margin: auto auto 7px;
+  padding: 15px 13px;  
+  font-size: 20px;
+  color:#fff;
+}
+
+
+.color-button{
+  background-color: darksalmon;
+  font-weight: bold;
+  padding: 15px 13px;  
+}
+

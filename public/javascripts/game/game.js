@@ -46,6 +46,7 @@ Game = {
         this.player1.unbind('KeyDown').unbind('KeyUp');
         this.player2.unbind('KeyDown').unbind('KeyUp');
     },
+    ctrlController: null,
     socket: null,
     init : function(){
         
@@ -53,78 +54,28 @@ Game = {
         //  Crafty.canvas.init();
         
         //init socket io client
-        this.socket = io();
+        Game.socket = io();
         
-        //recibo acciones del servidor para ejecutar
-        this.socket.on('actionData', function( actionData ){
-          console.log( actionData );
-          //var player =  actionData.playerId == 'player1' ? Game.player1 : Game.player2;
-          //player.actionManager( actionData.action );
-        });
+        Crafty.scene('Splash');
+      
+        Game.socketManager();
         
-        var y = ( this.height - Player.h ) / 2;
+    },
+    socketManager: function(){
+      
+      Game.socket.emit( 'init', { life: Game.player1.life,
+                                  color: Game.player1.pColor,
+                                  id: null });
+      
+      //updated player list
+      Game.socket.on('players', function( data ){
         
-        //player 1
-        Crafty.e("2D, DOM, Text").attr({ x: Player.x, y: y-50, z:5, w:50 })
-                                 .text( 'A: disparo S: escudo' )
-                                 .textFont({ size: '9px' });
-                         
-        this.player1 = Crafty.e('Player').at( 'player1', Player.x, y, '#000' )
-            .bind( 'KeyDown', function( e ){
-                
-                switch ( e.key ){
-                    case Controls.Player1.fire:                      
-                      this.chargeFire(); 
-                      break;
-                    case Controls.Player1.shield:                      
-                      this.shield();              
-                      break;
-                }
-                
-            })
-            .bind( 'KeyUp', function( e ){
-                                
-                switch( e.key ){
-                    case Controls.Player1.fire:    
-                      this.fire();      
-                      break;
-                    case Controls.Player1.shield:  
-                      this.unshield();  
-                      break;                 
-                }
-                
-            });   
+        console.log(data);
+        Game.ctrlController.updatePlayers( data );
         
-        
-        
-        //player 2
-        var x2 = this.width - Player.x - Player.w;
-        Crafty.e("2D, DOM, Text").attr({ x: x2, y: y-50, z:5, w:50})
-                                 .text( 'K: disparo L: escudo' )
-                                 .textFont({ size: '9px' });        
-                         
-        this.player2 = Crafty.e('Player').at( 'player2', x2, y, '#ef8c10' )
-            .bind( 'KeyDown', function( e ){
-            
-                switch ( e.key ){
-                    case Controls.Player2.fire: this.chargeFire(); break;
-                    case Controls.Player2.shield: this.shield();  break;                    
-                }            
-                
-            })
-            .bind( 'KeyUp', function( e ){
-        
-                switch( e.key ){
-                    case Controls.Player2.fire: this.fire();  break;
-                    case Controls.Player2.shield: this.unshield();  break;    
-                }
-                
-            }); 
-        
-        this.player1.theOther = this.player2;
-        this.player2.theOther = this.player1;
-        
-    }    
+      });
+      
+    }
     
 };
 

@@ -8,6 +8,9 @@
 
   {% block head %}
     
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:700' rel='stylesheet' type='text/css'>
+    <link href="/stylesheets/global.css" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/css.css" rel="stylesheet" type="text/css" />
     <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
@@ -18,11 +21,13 @@
     <script type="text/javascript" src="/bower_components/socket.io-client/socket.io.js"></script>
     
     <script type="text/javascript" src="/javascripts/game/crafty.js"></script>
+    <script type="text/javascript" src="/javascripts/game/scenes.js"></script>
     <script type="text/javascript" src="/javascripts/game/components.js"></script>
     <script type="text/javascript" src="/javascripts/game/game.js"></script>
-  
-    <script type="text/javascript" src="/javascripts/controllers/colorPickerCtrl.js"></script> 
-    <script type="text/javascript" src="/javascripts/controllers/playerPickerCtrl.js"></script>  
+      
+    <script type="text/javascript" src="/javascripts/services/gameService.js"></script> 
+    <script type="text/javascript" src="/javascripts/controllers/controlsCtrl.js"></script> 
+    <script type="text/javascript" src="/javascripts/directives/setActive.js"></script> 
   
   {% endblock %}
     
