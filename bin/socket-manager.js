@@ -5,7 +5,7 @@ var init = function( io ){
   
     console.log('a user connected');
     
-    socket.on( 'init', function( data ){             
+    socket.on( 'initPlayer', function( data ){             
       socket.data = data;
       socket.data.id = socket.id;   
       console.log('init data');
@@ -45,11 +45,13 @@ var updateClients = function( socket, io ){
       
   var clients = io.sockets.adapter.rooms
   
+  
   //iterate sockets
   for (var socketId in clients ) {   
       var player = io.sockets.connected[ socketId ];
       var clientsData = [];
-      
+      var emitter = null;  
+    
       //to each socket i send socket data, excepts itself
       for (var id in clients ) {           
         if( socketId != id ){
@@ -58,8 +60,12 @@ var updateClients = function( socket, io ){
         }
         
       }
+      
+      console.log( 'jugadores enviados a '+player.id );
       console.log( clientsData );
-      socket.broadcast.to( player.id ).emit( 'players', clientsData );    
+      emitter =  socket.id == player.id ? socket : socket.to( player.id );
+      emitter.emit( 'players', clientsData );
+    
   }
   
   

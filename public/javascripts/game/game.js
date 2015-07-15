@@ -63,7 +63,9 @@ Game = {
     },
     socketManager: function(){
       
-      Game.socket.emit( 'init', { life: Game.player1.life,
+      fb('*');
+      
+      Game.socket.emit( 'initPlayer', { life: Game.player1.life,                                  
                                   color: Game.player1.pColor,
                                   id: null });
       
