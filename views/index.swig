@@ -65,11 +65,10 @@
          <div id="oponent-picker" class="col-lg-3 text-center" >
            <label>Tu oponente</label>
            <div class="mypanel" >
-              <div ng-repeat="player in players" class="color-selector" style="background-color:{{player.color}}" >
+              <div ng-repeat="player in players" ng-click="chooseOponent( player.id )"  class="color-selector" style="background-color:{{player.color}}" >
                 <span class="nick" >{{player.nick}}</span>
                 <span>{{player.life}}</span>                
-              </div> 
-              
+              </div>
            </div>
          </div>
 

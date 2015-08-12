@@ -18,6 +18,10 @@ var init = function( io ){
       updateClients( socket, io );
     });
    
+    socket.on( 'chooseOponent', function( data ){ 
+      initGame( socket, io, data.id, socket.data.id );      
+    });
+    
     socket.on('disconnect', function(){      
       console.log('user disconnected');
       updateClients( socket, io );      
@@ -40,10 +44,34 @@ var actions = function( socket, io, data ){
   
 }
 
+var initGame = function( socket, io, playerId, oponentId ){
+  
+  var clients = io.sockets.adapter.rooms;
+  
+  //iterate sockets
+  for (var socketId in clients ) {   
+    
+    var emitter;    
+    var player = io.sockets.connected[ socketId ];    
+    
+    if( socketId == playerId ){
+      emitter = socket;
+    }   
+    if( socketId == oponentId ){
+      emitter = socket.to( player.id );
+    }
+    
+    emitter.emit( 'gameInit', {} );
+    
+  }
+  
+  
+}
+
 //broadcast updated clients list
 var updateClients = function( socket, io ){  
       
-  var clients = io.sockets.adapter.rooms
+  var clients = io.sockets.adapter.rooms;
   
   
   //iterate sockets

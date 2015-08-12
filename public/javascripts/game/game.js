@@ -61,9 +61,12 @@ Game = {
         Game.socketManager();
         
     },
-    socketManager: function(){
+    chooseOponent: function( oponentId ){
+    
+      Game.socket.emit( 'chooseOponent', { id: oponentId });
       
-      fb('*');
+    },
+    socketManager: function(){
       
       Game.socket.emit( 'initPlayer', { life: Game.player1.life,                                  
                                   color: Game.player1.pColor,

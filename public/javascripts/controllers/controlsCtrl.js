@@ -27,6 +27,12 @@ app.controller('ControlsController', [ '$scope', 'GameService', function( $scope
         $scope.players = players;
         $scope.$apply();        
       }
-  
+      
+      $scope.chooseOponent = function( oponentId ){
+        
+        GameService.game.chooseOponent( oponentId );
+        
+      }
+      
 }]);
 
