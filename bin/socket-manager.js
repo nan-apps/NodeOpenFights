@@ -19,7 +19,7 @@ var init = function( io ){
     });
    
     socket.on( 'chooseOponent', function( data ){ 
-      initGame( socket, io, data.id, socket.data.id );      
+      initGame( socket, io, data );      
     });
     
     socket.on('disconnect', function(){      
@@ -44,26 +44,19 @@ var actions = function( socket, io, data ){
   
 }
 
-var initGame = function( socket, io, playerId, oponentId ){
+var initGame = function( socket, io, data ){
+    
+  var player = socket.data; 
+  var playerEmitter = socket;
   
-  var clients = io.sockets.adapter.rooms;
+  var oponent = io.sockets.connected[ oponentId ].data; 
+  var oponentEmitter = socket.to( player.id );
   
-  //iterate sockets
-  for (var socketId in clients ) {   
-    
-    var emitter;    
-    var player = io.sockets.connected[ socketId ];    
-    
-    if( socketId == playerId ){
-      emitter = socket;
-    }   
-    if( socketId == oponentId ){
-      emitter = socket.to( player.id );
-    }
-    
-    emitter.emit( 'gameInit', {} );
-    
-  }
+  emitter.emit( 'gameInit', {
+      'oponent' : {
+        
+      }
+    });
   
   
 }
